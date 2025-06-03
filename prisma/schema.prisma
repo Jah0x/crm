@@ -1,0 +1,132 @@
+model User {
+  id           String        @id @default(cuid())
+  name         String? // Adaptive auto-sync, optional
+  email        String?       @unique // Adaptive auto-sync, optional
+  handle       String? // Adaptive auto-sync, optional
+  image        String? // Adaptive auto-sync, optional
+  password     String?
+  role         String        @default("CASHIER")
+  createdAt    DateTime      @default(now())
+  createdBy    String?
+  products     Product[]
+  activities   Activity[]
+  sales        Sale[]
+  workSessions WorkSession[]
+  settings     UserSettings?
+}
+
+model Brand {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  logoUrl     String?
+  isActive    Boolean   @default(true)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Category {
+  id            String     @id @default(cuid())
+  name          String     @unique
+  description   String?
+  parentId      String?
+  parent        Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  subcategories Category[] @relation("CategoryHierarchy")
+  products      Product[]
+  isActive      Boolean    @default(true)
+  sortOrder     Int        @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Product {
+  id             String          @id @default(cuid())
+  name           String
+  description    String?
+  costPrice      Float // Себестоимость
+  retailPrice    Float // Розничная цена
+  imageUrl       String?
+  puffCount      Int? // Количество затяжек (для одноразок)
+  stock          Int             @default(0)
+  minStock       Int             @default(5) // Минимальный остаток
+  isActive       Boolean         @default(true)
+  brandId        String
+  brand          Brand           @relation(fields: [brandId], references: [id])
+  categoryId     String
+  category       Category        @relation(fields: [categoryId], references: [id])
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  createdBy      String
+  creator        User            @relation(fields: [createdBy], references: [id])
+  activities     Activity[]
+  saleItems      SaleItem[]
+  stockMovements StockMovement[]
+}
+
+model Sale {
+  id            String     @id @default(cuid())
+  totalAmount   Float
+  discount      Float      @default(0)
+  finalAmount   Float
+  paymentMethod String     @default("CASH") // CASH, CARD, TRANSFER
+  userId        String
+  user          User       @relation(fields: [userId], references: [id])
+  items         SaleItem[]
+  createdAt     DateTime   @default(now())
+}
+
+model SaleItem {
+  id         String  @id @default(cuid())
+  quantity   Int
+  unitPrice  Float
+  totalPrice Float
+  saleId     String
+  sale       Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product @relation(fields: [productId], references: [id])
+}
+
+model StockMovement {
+  id        String   @id @default(cuid())
+  type      String // IN, OUT, ADJUSTMENT
+  quantity  Int
+  reason    String
+  notes     String?
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  createdBy String
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  action    String
+  details   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model WorkSession {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  date       DateTime
+  hours      Float
+  hourlyRate Float    @default(200)
+  totalPay   Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model UserSettings {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+  hourlyRate Float    @default(200)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
