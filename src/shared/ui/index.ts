@@ -2,4 +2,4 @@
 export * from "./Button";
 export * from "./Card";
 export * from "./Modal";
-export * from "./Tooltip"; // добавьте, когда появится
+export * from "./Tooltip";
