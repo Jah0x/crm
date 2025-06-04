@@ -3,13 +3,19 @@ FROM node:20-alpine as builder
 
 WORKDIR /app
 
-# Install dependencies
-COPY package.json package-lock.json* tsconfig.json vite.config.ts index.html ./
-COPY prisma ./prisma
+# Copy only package files and scripts initially
+COPY package.json package-lock.json* ./
 COPY scripts ./scripts
+
+# Install dependencies (runs preinstall)
+RUN npm install
+
+# Copy remaining project files
+COPY tsconfig.json vite.config.ts index.html ./
+COPY prisma ./prisma
 COPY src ./src
 
-RUN npm install
+# Build artifacts
 RUN npm run prisma:generate
 RUN npm run build
 
