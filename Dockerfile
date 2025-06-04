@@ -4,7 +4,7 @@ FROM node:20-alpine as builder
 WORKDIR /app
 
 # Install dependencies
-COPY package.json package-lock.json* tsconfig.json vite.config.ts ./
+COPY package.json package-lock.json* tsconfig.json vite.config.ts index.html ./
 COPY prisma ./prisma
 COPY scripts ./scripts
 COPY src ./src
