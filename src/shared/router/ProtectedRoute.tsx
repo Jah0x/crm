@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiClient } from "@/lib/api";
+import { apiClient } from "@/shared/lib";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
