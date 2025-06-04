@@ -1,7 +1,6 @@
 import { expect } from "expect";
 import {
   createProduct,
-  listProducts,
   createCategory,
   createBrand,
 } from "./api";

@@ -1,5 +1,5 @@
 // src/shared/ui/Button.tsx
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/shared/lib/utils";
@@ -31,7 +31,7 @@ export interface ButtonProps
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp: any = asChild ? Slot : "button";
+    const Comp: React.ElementType = asChild ? Slot : "button";
     return (
       <Comp
         ref={ref}

@@ -4,5 +4,7 @@ export async function getAuth() {
 }
 
 export async function upload({ bufferOrBase64, fileName }: { bufferOrBase64: string; fileName: string }) {
+  // Имитируем сохранение файла
+  void bufferOrBase64;
   return `uploaded/${fileName}`;
 }

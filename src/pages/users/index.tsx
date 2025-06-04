@@ -16,7 +16,7 @@ export default function UsersPage() {
   return (
     <div className="container mx-auto py-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {isLoading && <span>Загружаю…</span>}
-      {users.map((u: any) => (
+      {users.map((u) => (
         <Card key={u.id} className="p-4 flex items-center gap-3">
           <UserAvatar user={u} size={40} />
           <div>
