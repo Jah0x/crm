@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiClient } from "@/lib/api";
+import { apiClient } from "@/shared/lib";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -18,10 +18,13 @@ interface ProtectedRouteProps {
  * если роль не входит в allowedRoles → редирект на /.
  */
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { data: user, isLoading } = useQuery(
-    ["currentUser"],
-    apiClient.getCurrentUser,
-  );
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: async () => {
+      const { data } = await apiClient.get("/auth/me");
+      return data;
+    },
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
