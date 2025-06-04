@@ -1,5 +1,5 @@
-import { db } from "~/server/db";
-import { getAuth, upload } from "~/server/actions";
+import { db } from "@/server/db";
+import { getAuth, upload } from "@/server/actions";
 import * as bcrypt from "bcryptjs";
 
 // Auth functions
