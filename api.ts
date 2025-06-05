@@ -1,6 +1,7 @@
 import { db } from "@/server/db";
 import { getAuth, upload } from "@/server/actions";
 import * as bcrypt from "bcryptjs";
+import { Prisma } from "@prisma/client";
 
 // Auth functions
 export async function login({
@@ -292,7 +293,7 @@ export async function getProductsByCategory({
   categoryId?: string;
   subcategoryId?: string;
 }) {
-  const where: any = {
+  const where: Prisma.ProductWhereInput = {
     isActive: true,
     stock: { gt: 0 },
   };
@@ -879,7 +880,7 @@ export async function getSalesAnalytics({
     throw new Error("Insufficient permissions");
   }
 
-  const whereClause: any = {};
+  const whereClause: Prisma.SaleWhereInput = {};
   if (startDate || endDate) {
     whereClause.createdAt = {};
     if (startDate) whereClause.createdAt.gte = new Date(startDate);
@@ -1067,7 +1068,7 @@ export async function listWorkSessions({
   const targetUserId =
     currentUser.role === "CASHIER" ? currentUserId : userId || currentUserId;
 
-  const whereClause: any = { userId: targetUserId };
+  const whereClause: Prisma.WorkSessionWhereInput = { userId: targetUserId };
   if (startDate || endDate) {
     whereClause.date = {};
     if (startDate) whereClause.date.gte = new Date(startDate);
@@ -1679,7 +1680,11 @@ export async function getSalesSummary({
   // Get top selling products
   const productSales = new Map<
     string,
-    { product: any; quantity: number; revenue: number }
+    {
+      product: Prisma.ProductGetPayload<{ include: { brand: true; category: true } }>;
+      quantity: number;
+      revenue: number;
+    }
   >();
 
   sales.forEach((sale) => {

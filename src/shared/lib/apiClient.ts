@@ -27,7 +27,7 @@ export const apiClient = {
     throw new Error(`GET ${url} not implemented`);
   },
 
-  async post(url: string, payload: any) {
+  async post(url: string, payload: Record<string, unknown>) {
     if (url === "/auth/login") {
       // simple auth imitation
       const user = users.find((u) => u.email === payload.email);
@@ -58,7 +58,7 @@ export const apiClient = {
     throw new Error(`POST ${url} not implemented`);
   },
 
-  async put(url: string, payload: any) {
+  async put(url: string, payload: Record<string, unknown>) {
     const match = url.match(/\/products\/(.*)/);
     if (match) {
       const prod = products.find((p) => p.id === match[1]);

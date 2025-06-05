@@ -6,12 +6,14 @@ export function useProductMutations() {
   const qc = useQueryClient();
 
   const addProduct = useMutation({
-    mutationFn: (dto: any) => apiClient.post("/products", dto),
+    mutationFn: (dto: Record<string, unknown>) =>
+      apiClient.post("/products", dto),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["products"] }),
   });
 
   const updateProduct = useMutation({
-    mutationFn: ({ id, ...dto }: any) => apiClient.put(`/products/${id}`, dto),
+    mutationFn: ({ id, ...dto }: Record<string, unknown> & { id: string }) =>
+      apiClient.put(`/products/${id}`, dto),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["products"] }),
   });
 

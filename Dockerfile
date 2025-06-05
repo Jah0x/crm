@@ -3,14 +3,16 @@ FROM node:20-alpine as builder
 
 WORKDIR /app
 
-# Copy only package files and scripts initially
+ y2ools-codex/fix-module-not-found-error-in-preinstall
+# Copy package files and preinstall script first
 COPY package.json package-lock.json* ./
 COPY scripts ./scripts
 
-# Install dependencies (runs preinstall)
+# Install dependencies which run the preinstall script
 RUN npm install
 
-# Copy remaining project files
+# Copy the rest of the project
+
 COPY tsconfig.json vite.config.ts index.html ./
 COPY prisma ./prisma
 COPY src ./src
